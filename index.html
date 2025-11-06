@@ -77,6 +77,38 @@
             margin-top: 20px;
         }
 
+        /* Simple CTA / button styles */
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 0;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(90deg, #764ba2, #667eea);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.18);
+            transition: transform .15s ease, filter .15s ease;
+        }
+
+        .btn:active {
+            transform: translateY(1px)
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: #764ba2;
+            box-shadow: none;
+            border: 1px solid rgba(118, 75, 162, 0.12)
+        }
+
         /* Chart sizing moved from inline styles to CSS */
         #vis {
             max-width: 480px;
@@ -117,6 +149,10 @@
         <p class="welcome-text">
             Thank you for visiting. We're glad to have you here!
         </p>
+
+        <div class="actions" role="group" aria-label="Call to action">
+            <button class="btn" id="get-started">Get Started</button>
+        </div>
 
         <!-- Vega-Lite visualization container (minimal addition) -->
         <div class="chart-container">
@@ -212,6 +248,15 @@
                 "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
                 "legend": { "labelColor": "#444", "titleColor": "#444" }
             }
+        }
+
+        // Make the CTA button scroll to the chart container
+        const btn = document.getElementById('get-started');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const el = document.querySelector('.chart-container');
+                if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
         }
 
         vegaEmbed("#chart", spec3);
