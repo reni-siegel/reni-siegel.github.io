@@ -126,6 +126,12 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
         }
 
+        /* ensure each chart slot has visible space even if rendering fails */
+        .chart-container>div {
+            min-height: 220px;
+            width: 100%;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 40px 30px;
@@ -158,33 +164,47 @@
         <div class="chart-container">
             <div id="chart"></div>
             <div id="chart2"></div>
+            <div id="chart3"></div>
         </div>
     </div>
 
 
 
     <script>
-        // Minimal Vega-Lite spec: simple categorical bar chart
+        // First chart: grouped bar chart using site purple/blue palette and responsive sizing
         const spec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "Simple example bar chart",
+            "description": "Grouped categorical bar chart using page palette (purple & blue).",
             "data": {
                 "values": [
-                    { "category": "A", "value": 28 },
-                    { "category": "B", "value": 55 },
-                    { "category": "C", "value": 43 },
-                    { "category": "D", "value": 91 }
+                    { "category": "A", "group": "x", "value": 0.1 },
+                    { "category": "A", "group": "y", "value": 0.6 },
+                    { "category": "A", "group": "z", "value": 0.9 },
+                    { "category": "B", "group": "x", "value": 0.7 },
+                    { "category": "B", "group": "y", "value": 0.2 },
+                    { "category": "B", "group": "z", "value": 1.1 },
+                    { "category": "C", "group": "x", "value": 0.6 },
+                    { "category": "C", "group": "y", "value": 0.1 },
+                    { "category": "C", "group": "z", "value": 0.2 }
                 ]
             },
-            "mark": { "type": "bar", "cornerRadius": 6 },
+            "width": "container",
+            "autosize": { "type": "fit", "contains": "padding" },
+            "background": "transparent",
+            "mark": { "type": "bar", "cornerRadius": 6, "opacity": 0.95 },
             "encoding": {
-                "x": { "field": "category", "type": "nominal", "axis": { "labelAngle": 0 } },
-                "y": { "field": "value", "type": "quantitative" },
-                "color": { "value": "#764ba2" }
+                "x": { "field": "category", "type": "ordinal", "axis": { "labelColor": "#444", "titleColor": "#444" } },
+                "y": { "field": "value", "type": "quantitative", "axis": { "labelColor": "#444", "titleColor": "#444" } },
+                "xOffset": { "field": "group" },
+                "color": {
+                    "field": "group",
+                    "scale": { "domain": ["x", "y", "z"], "range": ["#764ba2", "#667eea", "#9fb0ff"] },
+                    "legend": { "orient": "top", "title": null, "labelColor": "#444" }
+                }
             },
             "config": {
                 "view": { "stroke": null },
-                "axis": { "labelColor": "#444", "titleColor": "#444" },
+                "axis": { "grid": false, "labelColor": "#444", "titleColor": "#444" },
                 "legend": { "labelColor": "#444", "titleColor": "#444" },
                 "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
             }
@@ -212,7 +232,7 @@
                 "legend": { "labelColor": "#444", "titleColor": "#444" },
                 "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
             }
-        }
+        };
 
         const spec3 = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -248,7 +268,7 @@
                 "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
                 "legend": { "labelColor": "#444", "titleColor": "#444" }
             }
-        }
+        };
 
         // Make the CTA button scroll to the chart container
         const btn = document.getElementById('get-started');
@@ -259,8 +279,62 @@
             });
         }
 
-        vegaEmbed("#chart", spec3);
-        vegaEmbed("#chart2", spec2);
+        // Helper that embeds a Vega(-Lite) spec with a loading message and a fallback.
+        function embedWithFallback(selector, spec, fallbackSpec) {
+            const el = document.querySelector(selector);
+            if (!el) return Promise.reject(new Error('Missing element: ' + selector));
+            // show a simple loading state
+            el.innerHTML = '<div style="padding:20px;color:#666">Loading chart…</div>';
+
+            return vegaEmbed(selector, spec, { actions: false })
+                .catch(err => {
+                    // log error for debugging
+                    console.error('vegaEmbed error for', selector, err && err.message ? err.message : err);
+                    // show user-facing message
+                    el.innerHTML = '<div style="padding:16px;color:#c00">Chart failed to load (see console). Showing fallback.</div>';
+                    if (fallbackSpec) {
+                        return vegaEmbed(selector, fallbackSpec, { actions: false }).catch(fbErr => {
+                            console.error('fallback embed failed for', selector, fbErr && fbErr.message ? fbErr.message : fbErr);
+                            el.innerHTML = '<div style="padding:16px;color:#c00">Fallback also failed: ' + (fbErr && fbErr.message ? fbErr.message : String(fbErr)) + '</div>';
+                            return Promise.reject(fbErr);
+                        });
+                    }
+                    return Promise.reject(err);
+                });
+        }
+
+        // Small inline fallback dataset for the population pyramid (a tiny sample)
+        const fallbackPopulation = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "Inline fallback population sample (small) using page theme.",
+            "data": {
+                "values": [
+                    { "age": "80+", "signed_people": -2000000, "gender": "Female" },
+                    { "age": "70-79", "signed_people": -3500000, "gender": "Female" },
+                    { "age": "60-69", "signed_people": -4500000, "gender": "Female" },
+                    { "age": "50-59", "signed_people": -5200000, "gender": "Female" },
+                    { "age": "40-49", "signed_people": -6000000, "gender": "Female" },
+                    { "age": "30-39", "signed_people": 6200000, "gender": "Male" },
+                    { "age": "20-29", "signed_people": 7000000, "gender": "Male" },
+                    { "age": "10-19", "signed_people": 6800000, "gender": "Male" }
+                ]
+            },
+            "width": "container",
+            "autosize": { "type": "fit", "contains": "padding" },
+            "background": "transparent",
+            "mark": { "type": "bar", "cornerRadius": 6, "opacity": 0.9 },
+            "encoding": {
+                "y": { "field": "age", "type": "ordinal", "sort": "descending" },
+                "x": { "aggregate": "sum", "field": "signed_people", "axis": { "format": "s", "labelColor": "#444" } },
+                "color": { "field": "gender", "scale": { "domain": ["Female", "Male"], "range": ["#764ba2", "#667eea"] } }
+            },
+            "config": { "view": { "stroke": null }, "axis": { "grid": false }, "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif" }
+        };
+
+        // Embed all three charts with fallbacks (only spec3 needs fallback because it fetches external data)
+        embedWithFallback('#chart', spec).catch(() => { });
+        embedWithFallback('#chart2', spec2).catch(() => { });
+        embedWithFallback('#chart3', spec3, fallbackPopulation).catch(() => { });
 
     </script>
 
