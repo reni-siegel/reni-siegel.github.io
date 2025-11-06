@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <!-- Vega / Vega-Lite / vega-embed (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .welcome-text {
+            color: #666;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 30px auto;
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        /* Chart sizing moved from inline styles to CSS */
+        #vis {
+            max-width: 480px;
+            height: 260px;
+            margin: 18px auto 0;
+        }
+
+        /* Chart container styling */
+        .chart-container {
+            max-width: 520px;
+            margin: 12px auto 0;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .welcome-text {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome!</h1>
+        <div class="divider"></div>
+        <p class="welcome-text">
+            Thank you for visiting. We're glad to have you here!
+        </p>
+
+        <!-- Vega-Lite visualization container (minimal addition) -->
+        <div class="chart-container">
+            <div id="chart"></div>
+            <div id="chart2"></div>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Minimal Vega-Lite spec: simple categorical bar chart
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "Simple example bar chart",
+            "data": {
+                "values": [
+                    { "category": "A", "value": 28 },
+                    { "category": "B", "value": 55 },
+                    { "category": "C", "value": 43 },
+                    { "category": "D", "value": 91 }
+                ]
+            },
+            "mark": { "type": "bar", "cornerRadius": 6 },
+            "encoding": {
+                "x": { "field": "category", "type": "nominal", "axis": { "labelAngle": 0 } },
+                "y": { "field": "value", "type": "quantitative" },
+                "color": { "value": "#764ba2" }
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "labelColor": "#444", "titleColor": "#444" },
+                "legend": { "labelColor": "#444", "titleColor": "#444" },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        };
+
+        const spec2 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "A simple bar chart with embedded data.",
+            "data": {
+                "values": [
+                    { "a": "A", "b": 28 }, { "a": "B", "b": 55 }, { "a": "C", "b": 43 },
+                    { "a": "D", "b": 91 }, { "a": "E", "b": 81 }, { "a": "F", "b": 53 },
+                    { "a": "G", "b": 19 }, { "a": "H", "b": 87 }, { "a": "I", "b": 52 }
+                ]
+            },
+            "mark": { "type": "bar", "cornerRadius": 6 },
+            "encoding": {
+                "x": { "field": "a", "type": "nominal", "axis": { "labelAngle": 0 } },
+                "y": { "field": "b", "type": "quantitative" },
+                "color": { "value": "#667eea" }
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "labelColor": "#444", "titleColor": "#444" },
+                "legend": { "labelColor": "#444", "titleColor": "#444" },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        }
+
+        const spec3 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "A population pyramid for the US in 2000, created using stack. See https://vega.github.io/vega-lite/examples/concat_population_pyramid.html for a variant of this created using concat.",
+            "data": { "url": "https://vega.github.io/editor/data/population.json" },
+            "transform": [
+                { "filter": "datum.year == 2000" },
+                { "calculate": "datum.sex == 2 ? 'Female' : 'Male'", "as": "gender" },
+                { "calculate": "datum.sex == 2 ? -datum.people : datum.people", "as": "signed_people" }
+            ],
+            "width": 300,
+            "height": 200,
+            "mark": { "type": "bar", "cornerRadius": 4 },
+            "encoding": {
+                "y": {
+                    "field": "age",
+                    "axis": null, "sort": "descending"
+                },
+                "x": {
+                    "aggregate": "sum", "field": "signed_people",
+                    "title": "population",
+                    "axis": { "format": "s" }
+                },
+                "color": {
+                    "field": "gender",
+                    "scale": { "range": ["#764ba2", "#667eea"] },
+                    "legend": { "orient": "top", "title": null }
+                }
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "grid": false },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+                "legend": { "labelColor": "#444", "titleColor": "#444" }
+            }
+        }
+
+        vegaEmbed("#chart", spec3);
+        vegaEmbed("#chart2", spec2);
+
+    </script>
+
+</body>
+
+</html>
