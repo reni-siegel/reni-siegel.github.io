@@ -1,272 +1,513 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <title>Kávéfogyasztás és Egészség Vizualizáció</title>
     <!-- Vega / Vega-Lite / vega-embed (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 60px 40px;
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-            animation: fadeIn 0.8s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            color: #333;
-            font-size: 3em;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .welcome-text {
-            color: #666;
-            font-size: 1.2em;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .divider {
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            margin: 30px auto;
-            border-radius: 2px;
-        }
-
-        .subtitle {
-            color: #888;
-            font-size: 1em;
-            margin-top: 20px;
-        }
-
-        /* Simple CTA / button styles */
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .btn {
-            appearance: none;
-            border: 0;
-            padding: 10px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            color: white;
-            background: linear-gradient(90deg, #764ba2, #667eea);
-            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.18);
-            transition: transform .15s ease, filter .15s ease;
-        }
-
-        .btn:active {
-            transform: translateY(1px)
-        }
-
-        .btn.secondary {
-            background: transparent;
-            color: #764ba2;
-            box-shadow: none;
-            border: 1px solid rgba(118, 75, 162, 0.12)
-        }
-
-        /* Chart sizing moved from inline styles to CSS */
-        #vis {
-            max-width: 480px;
-            height: 260px;
-            margin: 18px auto 0;
-        }
-
-        /* Chart container styling */
-        .chart-container {
-            max-width: 520px;
-            margin: 12px auto 0;
-            background: rgba(255, 255, 255, 0.98);
-            padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        /* ensure each chart slot has visible space even if rendering fails */
-        .chart-container>div {
-            min-height: 220px;
-            width: 100%;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 40px 30px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            .welcome-text {
-                font-size: 1em;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>Welcome!</h1>
+        <h1>☕ A Kávé Titka</h1>
+        <p class="subtitle-main">Egészség vagy kockázat? Adatvezérelt elemzés 10,000 kávéfogyasztó életéről</p>
         <div class="divider"></div>
-        <p class="welcome-text">
-            Thank you for visiting. We're glad to have you here!
-        </p>
 
-        <div class="actions" role="group" aria-label="Call to action">
-            <button class="btn" id="get-started">Get Started</button>
-        </div>
+        <!-- Intro Section -->
+        <section class="intro-section">
+            <h2>🎯 Miért fontos ez?</h2>
+            <p class="intro-text">
+                A kávé a világ második legkereskedettebb nyersanyaga az olaj után. Naponta több mint 2 milliárd csésze
+                fogy el világszerte.
+                De vajon egészséges ez a szokás? Hogyan befolyásolja alvásunkat, stressz szintünket és általános
+                jóllétünket?
+            </p>
+            <p class="intro-text">
+                Ez az interaktív elemzés <strong>10,000 személy valós adatain</strong> keresztül tárja fel a
+                kávéfogyasztás és az egészség összefüggéseit.
 
-        <!-- Vega-Lite visualization container (minimal addition) -->
+            </p>
+        </section>
+
+
+
+        <!-- Data Story -->
         <div class="chart-container">
-            <div id="chart"></div>
+            <h2 class="chart-section-title">1. Ki a kávéfogyasztó? – Demográfiai profil</h2>
+            <p class="chart-description">
+                Az átlagos napi kávéfogyasztás <strong>korosztály és nem szerinti</strong> bontásban. A diagram
+                öt korosztályt (18-29, 30-39, 40-49, 50-59, 60+) mutat, különválasztva a férfi és női fogyasztókat.
+                Minden oszlop az adott csoport átlagos napi csészeszámát jelzi.
+            </p>
+            <div id="chart1"></div>
+            <p class="chart-insight">💡 <strong>Insight:</strong> A diagram alapján látható, hogy a 40-49 éves
+                korosztály iszik a legtöbb kávét átlagosan, és általában a férfiak fogyasztanak valamivel többet minden
+                korosztályban.</p>
+
+            <h2 class="chart-section-title">2. Globális kávéfogyasztási térkép – Országok összehasonlítása</h2>
+            <p class="chart-description">
+                A <strong>top 15 ország</strong> átlagos napi kávéfogyasztása csésze/nap egységben. Az oszlopdiagram
+                csökkenő sorrendben mutatja az országokat, így gyorsan látszik, mely nemzetek fogyasztanak leginkább
+                kávét.
+            </p>
             <div id="chart2"></div>
+            <p class="chart-insight">💡 <strong>Insight:</strong> A legjobb 15 ország között az átlagos fogyasztás
+                2.8-3.2 csésze/nap körül mozog, de vanák kisebb eltérések a kulturális szokások miatt.</p>
+
+            <h2 class="chart-section-title">3. Az alvás ára – Koffein hatása az alvásra</h2>
+            <p class="chart-description">
+                A <strong>koffein (mg/nap) és az alvásidő (óra)</strong> közötti kapcsolat
+                <strong>sűrűségtérképpel</strong>
+                (2D heatmap). 10,000 adatpontot vödrökbe (bins) soroltunk, így látható a leggyakoribb kombinációk.
+                A sötétebb barát színek több embert jeleznek az adott koffein-alvás tartományban.
+            </p>
             <div id="chart3"></div>
+            <p class="chart-insight">💡 <strong>Insight:</strong> Világosan látható a negatív trend: a magasabb koffein
+                tartományok alacsonyabb alvásidővel párosulnak. A legtöbb ember 200-400mg koffein és 6-7 óra alvás körül
+                csoportosul.</p>
+
+            <h2 class="chart-section-title">4. Stressz és fizikai aktivitás – Életmód mintazátok</h2>
+            <p class="chart-description">
+                Hogyan oszlik meg a <strong>stresszszint az aktív és inaktív</strong> emberek körében? Ez a
+                csoportosított
+                oszlopdiagram három fizikai aktivitási kategóriát (Alacsony, Közepes, Magas) és három stressz szintet
+                (Low, Medium, High) mutat, így látható a két változó kapcsolata.
+            </p>
+            <div id="chart4"></div>
+            <p class="chart-insight">💡 <strong>Insight:</strong> Mindkét alacsony és magas fizikai aktivitású
+                csoportokban a 'Low' stressz a leggyakoribb. Az aktívabb emberek körében viszont kevesebb a 'High'
+                stresszű.</p>
+
+            <h2 class="chart-section-title">5. Kávéfogyasztás és alvásminőség – Összefüggések</h2>
+            <p class="chart-description">
+                A <strong>kávé mennyisége</strong> befolyásolja az alvásminőséget? Négy fogyasztási kategória
+                (Kevés, Közepes, Sok, Nagyon sok) és négy alvásminőségi szint (Excellent, Good, Fair, Poor) mutatja,
+                hogy a magasabb kávéfogyasztás esetén csökken az 'Excellent' és nő a 'Fair/Poor' előfordulás.
+            </p>
+            <div id="chart5"></div>
+            <p class="chart-insight">💡 <strong>Insight:</strong> A 'Kevés' és 'Közepes' kávéfogyasztóknál több az
+                'Excellent'
+                alvásminőség. Ezzel szemben a 'Nagyon sok' kávé mellett nő a 'Fair' és 'Poor' aránya.</p>
+
+            <h2 class="chart-section-title">6. Egészségügyi problémák eloszlása – Kávéfogyasztás hatása</h2>
+            <p class="chart-description">
+                Van-e <strong>különbség az egészségügyi problémák gyakoriságában</strong> a keveset (<2 csésze) és sokat
+                    (4+ csésze) kávézok között? A <strong>csoportosított oszlopdiagram</strong> (grouped bar chart)
+                    közvetlenül egymás mellé helyezi a két csoportot minden egészségi kategóriánál - így azonnal látható
+                    a különbség.
+            </p>
+            <div id="chart6"></div>
+            <p class="chart-insight">💡 <strong>Insight:</strong> A 'None' kategóriában a keveset kávézóknál több ember
+                van,
+                míg a 'Mild' és 'Moderate' problémák gyakoribbak a sokat ivók körében. A 'Severe' mindkettőnél ritka.
+            </p>
         </div>
+
+        <!-- Conclusion Section -->
+        <section class="conclusion-section">
+            <h2>📌 Következtetések</h2>
+            <div class="conclusion-box">
+                <h3>✅ Amit megtudtunk:</h3>
+                <ul>
+                    <li>A <strong>40-49 éves korosztály</strong> fogyasztja átlagosan a legtöbb kávét, és a férfiak
+                        minden korosztályban valamivel többet isznak</li>
+                    <li>A <strong>top 15 országban</strong> 2.8-3.2 csésze/nap között alakul az átlagos fogyasztás,
+                        kisebb kulturális eltérésekkel</li>
+                    <li><strong>Erős negatív korreláció</strong> a koffein és alvásidő között - minél több koffein,
+                        annál kevesebb alvás</li>
+                    <li>Az <strong>aktívabb emberek körében kevesebb</strong> a magas stressz szint, függetlenül az
+                        aktivitás mértékétől</li>
+                    <li>A <strong>magasabb kávéfogyasztás</strong> (6+ csésze) mellett csökken az 'Excellent'
+                        alvásminőség és nő a 'Fair/Poor' kategória</li>
+                    <li>A <strong>sokat kávézók körében</strong> (4+ csésze) nagyobb arányban fordul elő 'Mild' és
+                        'Moderate' egészségügyi probléma</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Technical Documentation -->
+        <section class="tech-section">
+            <h2>🔧 Technikai háttér</h2>
+            <p class="tech-text">
+                <strong>Adatforrás:</strong> Szintetikus kávéfogyasztási és egészségügyi adatbázis, 10,000 rekord<br>
+                <strong>Formátum:</strong> Tidy (sor alapú) CSV, oszlopok: ID, Age, Gender, Country, Coffee_Intake,
+                Caffeine_mg, Sleep_Hours, stb.<br>
+                <strong>Eszközök:</strong> Vega-Lite 5.x interaktív vizualizációs library<br>
+                <strong>Transzformációk:</strong> Age binning, aggregation (mean, count), Z-score standardizáció (Chart
+                4), regression (Chart 3)<br>
+                <strong>Kód:</strong> <a href="https://github.com/yourusername/coffee-health-viz" target="_blank">GitHub
+                    Repository</a>
+            </p>
+        </section>
     </div>
 
 
 
     <script>
-        // First chart: grouped bar chart using site purple/blue palette and responsive sizing
-        const spec = {
+        // 1) Demográfiai áttekintés – Ki iszik kávét?
+        const spec1 = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "Grouped categorical bar chart using page palette (purple & blue).",
-            "data": {
-                "values": [
-                    { "category": "A", "group": "x", "value": 0.1 },
-                    { "category": "A", "group": "y", "value": 0.6 },
-                    { "category": "A", "group": "z", "value": 0.9 },
-                    { "category": "B", "group": "x", "value": 0.7 },
-                    { "category": "B", "group": "y", "value": 0.2 },
-                    { "category": "B", "group": "z", "value": 1.1 },
-                    { "category": "C", "group": "x", "value": 0.6 },
-                    { "category": "C", "group": "y", "value": 0.1 },
-                    { "category": "C", "group": "z", "value": 0.2 }
-                ]
-            },
-            "width": "container",
-            "autosize": { "type": "fit", "contains": "padding" },
+            "title": "Kávéfogyasztás korosztály és nem szerint",
+            "data": { "url": "synthetic_coffee_health_10000.csv" },
+            "width": 500,
+            "height": 280,
             "background": "transparent",
-            "mark": { "type": "bar", "cornerRadius": 6, "opacity": 0.95 },
-            "encoding": {
-                "x": { "field": "category", "type": "ordinal", "axis": { "labelColor": "#444", "titleColor": "#444" } },
-                "y": { "field": "value", "type": "quantitative", "axis": { "labelColor": "#444", "titleColor": "#444" } },
-                "xOffset": { "field": "group" },
-                "color": {
-                    "field": "group",
-                    "scale": { "domain": ["x", "y", "z"], "range": ["#764ba2", "#667eea", "#9fb0ff"] },
-                    "legend": { "orient": "top", "title": null, "labelColor": "#444" }
-                }
-            },
-            "config": {
-                "view": { "stroke": null },
-                "axis": { "grid": false, "labelColor": "#444", "titleColor": "#444" },
-                "legend": { "labelColor": "#444", "titleColor": "#444" },
-                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
-            }
-        };
-
-        const spec2 = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "A simple bar chart with embedded data.",
-            "data": {
-                "values": [
-                    { "a": "A", "b": 28 }, { "a": "B", "b": 55 }, { "a": "C", "b": 43 },
-                    { "a": "D", "b": 91 }, { "a": "E", "b": 81 }, { "a": "F", "b": 53 },
-                    { "a": "G", "b": 19 }, { "a": "H", "b": 87 }, { "a": "I", "b": 52 }
-                ]
-            },
-            "mark": { "type": "bar", "cornerRadius": 6 },
-            "encoding": {
-                "x": { "field": "a", "type": "nominal", "axis": { "labelAngle": 0 } },
-                "y": { "field": "b", "type": "quantitative" },
-                "color": { "value": "#667eea" }
-            },
-            "config": {
-                "view": { "stroke": null },
-                "axis": { "labelColor": "#444", "titleColor": "#444" },
-                "legend": { "labelColor": "#444", "titleColor": "#444" },
-                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
-            }
-        };
-
-        const spec3 = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "A population pyramid for the US in 2000, created using stack. See https://vega.github.io/vega-lite/examples/concat_population_pyramid.html for a variant of this created using concat.",
-            "data": { "url": "https://vega.github.io/editor/data/population.json" },
             "transform": [
-                { "filter": "datum.year == 2000" },
-                { "calculate": "datum.sex == 2 ? 'Female' : 'Male'", "as": "gender" },
-                { "calculate": "datum.sex == 2 ? -datum.people : datum.people", "as": "signed_people" }
-            ],
-            "width": 300,
-            "height": 200,
-            "mark": { "type": "bar", "cornerRadius": 4 },
-            "encoding": {
-                "y": {
-                    "field": "age",
-                    "axis": null, "sort": "descending"
-                },
-                "x": {
-                    "aggregate": "sum", "field": "signed_people",
-                    "title": "population",
-                    "axis": { "format": "s" }
-                },
-                "color": {
-                    "field": "gender",
-                    "scale": { "range": ["#764ba2", "#667eea"] },
-                    "legend": { "orient": "top", "title": null }
+                { "calculate": "datum.Age < 30 ? '18-29' : datum.Age < 40 ? '30-39' : datum.Age < 50 ? '40-49' : datum.Age < 60 ? '50-59' : '60+'", "as": "age_group" },
+                {
+                    "aggregate": [{ "op": "mean", "field": "Coffee_Intake", "as": "avg_coffee" }],
+                    "groupby": ["age_group", "Gender"]
                 }
+            ],
+            "params": [{
+                "name": "highlight",
+                "select": { "type": "point", "on": "mouseover" }
+            }],
+            "mark": { "type": "bar", "cornerRadius": 4, "width": { "band": 0.9 }, "cursor": "pointer" },
+            "encoding": {
+                "x": {
+                    "field": "age_group",
+                    "type": "ordinal",
+                    "title": "Korosztály",
+                    "sort": ["18-29", "30-39", "40-49", "50-59", "60+"],
+                    "axis": { "labelAngle": 0, "labelColor": "#444" }
+                },
+                "y": {
+                    "field": "avg_coffee",
+                    "type": "quantitative",
+                    "title": "Átlag kávéfogyasztás (csésze/nap)",
+                    "axis": { "labelColor": "#444" }
+                },
+                "xOffset": { "field": "Gender" },
+                "color": {
+                    "field": "Gender",
+                    "type": "nominal",
+                    "scale": {
+                        "domain": ["Male", "Female"],
+                        "range": ["#6F4E37", "#BCAAA4"]
+                    },
+                    "legend": { "title": "Nem", "labelColor": "#444" }
+                },
+                "opacity": {
+                    "condition": { "param": "highlight", "value": 1 },
+                    "value": 0.7
+                },
+                "strokeWidth": {
+                    "condition": { "param": "highlight", "value": 2 },
+                    "value": 0
+                },
+                "tooltip": [
+                    { "field": "Gender", "type": "nominal", "title": "Nem" },
+                    { "field": "age_group", "type": "ordinal", "title": "Korosztály" },
+                    { "field": "avg_coffee", "type": "quantitative", "title": "Átlag kávé", "format": ".2f" }
+                ]
             },
             "config": {
                 "view": { "stroke": null },
                 "axis": { "grid": false },
-                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
-                "legend": { "labelColor": "#444", "titleColor": "#444" }
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        };
+
+        // 2) Országok összehasonlítása – Column Chart
+        const spec2 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Átlagos kávéfogyasztás országonként",
+            "data": { "url": "synthetic_coffee_health_10000.csv" },
+            "width": "container",
+            "height": 320,
+            "background": "transparent",
+            "transform": [
+                {
+                    "aggregate": [{ "op": "mean", "field": "Coffee_Intake", "as": "avg_coffee" }],
+                    "groupby": ["Country"]
+                },
+                { "window": [{ "op": "rank", "as": "rank" }], "sort": [{ "field": "avg_coffee", "order": "descending" }] },
+                { "filter": "datum.rank <= 15" }
+            ],
+            "mark": { "type": "bar", "cornerRadius": 4 },
+            "encoding": {
+                "x": {
+                    "field": "Country",
+                    "type": "nominal",
+                    "sort": { "field": "avg_coffee", "order": "descending" },
+                    "title": "Ország",
+                    "axis": { "labelAngle": -45, "labelColor": "#444" }
+                },
+                "y": {
+                    "field": "avg_coffee",
+                    "type": "quantitative",
+                    "title": "Átlagos kávéfogyasztás (csésze/nap)",
+                    "axis": { "labelColor": "#444" }
+                },
+                "color": {
+                    "field": "avg_coffee",
+                    "type": "quantitative",
+                    "scale": {
+                        "scheme": "browns",
+                        "reverse": false
+                    },
+                    "legend": null
+                },
+                "tooltip": [
+                    { "field": "Country", "type": "nominal", "title": "Ország" },
+                    { "field": "avg_coffee", "type": "quantitative", "title": "Átlag csésze/nap", "format": ".2f" },
+                    { "field": "rank", "type": "quantitative", "title": "Helyezés" }
+                ]
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "grid": false },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        };
+
+        // 3) Koffein és alvás kapcsolata – 2D Density Heatmap
+        const spec3 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Koffeinbevitel és alvásidő sűrűségtérképe",
+            "data": { "url": "synthetic_coffee_health_10000.csv" },
+            "width": "container",
+            "height": 280,
+            "background": "transparent",
+            "transform": [
+                {
+                    "bin": { "maxbins": 30 },
+                    "field": "Caffeine_mg",
+                    "as": "bin_caffeine"
+                },
+                {
+                    "bin": { "maxbins": 20 },
+                    "field": "Sleep_Hours",
+                    "as": "bin_sleep"
+                },
+                {
+                    "aggregate": [{ "op": "count", "as": "count" }],
+                    "groupby": ["bin_caffeine", "bin_caffeine_end", "bin_sleep", "bin_sleep_end"]
+                }
+            ],
+            "mark": { "type": "rect" },
+            "encoding": {
+                "x": {
+                    "field": "bin_caffeine",
+                    "type": "quantitative",
+                    "bin": "binned",
+                    "title": "Koffein (mg/nap)",
+                    "axis": { "labelColor": "#444" }
+                },
+                "x2": { "field": "bin_caffeine_end" },
+                "y": {
+                    "field": "bin_sleep",
+                    "type": "quantitative",
+                    "bin": "binned",
+                    "title": "Alvásidő (óra)",
+                    "axis": { "labelColor": "#444" }
+                },
+                "y2": { "field": "bin_sleep_end" },
+                "color": {
+                    "field": "count",
+                    "type": "quantitative",
+                    "scale": { "scheme": "browns" },
+                    "legend": { "title": "Emberek száma", "labelColor": "#444" }
+                },
+                "tooltip": [
+                    { "field": "bin_caffeine", "type": "quantitative", "title": "Koffein től (mg)", "format": ".0f" },
+                    { "field": "bin_caffeine_end", "type": "quantitative", "title": "Koffein-ig (mg)", "format": ".0f" },
+                    { "field": "bin_sleep", "type": "quantitative", "title": "Alvás től (óra)", "format": ".1f" },
+                    { "field": "bin_sleep_end", "type": "quantitative", "title": "Alvás-ig (óra)", "format": ".1f" },
+                    { "field": "count", "type": "quantitative", "title": "Emberek száma" }
+                ]
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "grid": false },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        };
+
+        // 4) Stressz és fizikai aktivitás – Grouped Bar Chart
+        const spec4 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Stressz szint és fizikai aktivitás kapcsolata",
+            "data": { "url": "synthetic_coffee_health_10000.csv" },
+            "width": "container",
+            "height": 300,
+            "background": "transparent",
+            "transform": [
+                { "filter": "datum.Physical_Activity_Hours > 0" },
+                { "calculate": "datum.Physical_Activity_Hours < 5 ? 'Alacsony (0-5h)' : datum.Physical_Activity_Hours < 10 ? 'Közepes (5-10h)' : 'Magas (10h+)'", "as": "activity_category" },
+                {
+                    "aggregate": [{ "op": "count", "as": "count" }],
+                    "groupby": ["activity_category", "Stress_Level"]
+                }
+            ],
+            "layer": [
+                {
+                    "mark": { "type": "bar", "cornerRadius": 4 },
+                    "encoding": {
+                        "x": {
+                            "field": "activity_category",
+                            "type": "ordinal",
+                            "title": "Fizikai aktivitás szintje",
+                            "sort": ["Alacsony (0-5h)", "Közepes (5-10h)", "Magas (10h+)"],
+                            "axis": { "labelAngle": -20, "labelColor": "#444" }
+                        },
+                        "y": {
+                            "field": "count",
+                            "type": "quantitative",
+                            "title": "Emberek száma",
+                            "axis": { "labelColor": "#444" }
+                        },
+                        "xOffset": { "field": "Stress_Level" },
+                        "color": {
+                            "field": "Stress_Level",
+                            "type": "nominal",
+                            "scale": {
+                                "domain": ["Low", "Medium", "High"],
+                                "range": ["#BCAAA4", "#8D6E63", "#5D4037"]
+                            },
+                            "legend": { "title": "Stressz szint", "labelColor": "#444" }
+                        },
+                        "tooltip": [
+                            { "field": "activity_category", "type": "ordinal", "title": "Aktivitás" },
+                            { "field": "Stress_Level", "type": "nominal", "title": "Stressz" },
+                            { "field": "count", "type": "quantitative", "title": "Emberek száma" }
+                        ]
+                    }
+                },
+                {
+                    "mark": { "type": "text", "dy": -5, "fontSize": 10, "color": "#3E2723" },
+                    "encoding": {
+                        "x": {
+                            "field": "activity_category",
+                            "type": "ordinal",
+                            "sort": ["Alacsony (0-5h)", "Közepes (5-10h)", "Magas (10h+)"]
+                        },
+                        "y": {
+                            "field": "count",
+                            "type": "quantitative"
+                        },
+                        "xOffset": { "field": "Stress_Level" },
+                        "text": { "field": "count", "type": "quantitative" }
+                    }
+                }
+            ],
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "grid": false },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        };
+
+        // 5) Kávéfogyasztás és alvásminőség – Grouped Bar Chart
+        const spec5 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Kávéfogyasztás és alvásminőség",
+            "data": { "url": "synthetic_coffee_health_10000.csv" },
+            "width": "container",
+            "height": 280,
+            "background": "transparent",
+            "transform": [
+                { "calculate": "datum.Coffee_Intake < 2 ? 'Kevés (0-2)' : datum.Coffee_Intake < 4 ? 'Közepes (2-4)' : datum.Coffee_Intake < 6 ? 'Sok (4-6)' : 'Nagyon sok (6+)'", "as": "coffee_category" },
+                {
+                    "aggregate": [{ "op": "count", "as": "count" }],
+                    "groupby": ["coffee_category", "Sleep_Quality"]
+                }
+            ],
+            "mark": { "type": "bar", "cornerRadius": 4 },
+            "encoding": {
+                "x": {
+                    "field": "coffee_category",
+                    "type": "ordinal",
+                    "title": "Kávéfogyasztás (csésze/nap)",
+                    "sort": ["Kevés (0-2)", "Közepes (2-4)", "Sok (4-6)", "Nagyon sok (6+)"],
+                    "axis": { "labelAngle": -20, "labelColor": "#444" }
+                },
+                "y": {
+                    "field": "count",
+                    "type": "quantitative",
+                    "title": "Emberek száma",
+                    "axis": { "labelColor": "#444" }
+                },
+                "xOffset": { "field": "Sleep_Quality" },
+                "color": {
+                    "field": "Sleep_Quality",
+                    "type": "ordinal",
+                    "scale": {
+                        "domain": ["Excellent", "Good", "Fair", "Poor"],
+                        "range": ["#BCAAA4", "#A1887F", "#6F4E37", "#5D4037"]
+                    },
+                    "legend": { "title": "Alvásminőség", "labelColor": "#444" }
+                },
+                "tooltip": [
+                    { "field": "coffee_category", "type": "ordinal", "title": "Kávéfogyasztás" },
+                    { "field": "Sleep_Quality", "type": "ordinal", "title": "Alvásminőség" },
+                    { "field": "count", "type": "quantitative", "title": "Emberek száma" }
+                ]
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "grid": false },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
+            }
+        };
+
+        // 6) Egészségügyi problémák eloszlása – Grouped Bar Chart
+        const spec6 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Egészségügyi problémák: Kevés vs Sok kávé",
+            "data": { "url": "synthetic_coffee_health_10000.csv" },
+            "width": "container",
+            "height": 300,
+            "background": "transparent",
+            "transform": [
+                { "calculate": "datum.Coffee_Intake < 2 ? 'Kevés kávé (<2)' : datum.Coffee_Intake >= 4 ? 'Sok kávé (4+)' : null", "as": "coffee_category" },
+                { "filter": "datum.coffee_category != null" },
+                {
+                    "aggregate": [{ "op": "count", "as": "count" }],
+                    "groupby": ["coffee_category", "Health_Issues"]
+                }
+            ],
+            "mark": { "type": "bar", "cornerRadius": 3 },
+            "encoding": {
+                "x": {
+                    "field": "Health_Issues",
+                    "type": "nominal",
+                    "title": "Egészségügyi probléma szintje",
+                    "sort": ["None", "Mild", "Moderate", "Severe"],
+                    "axis": { "labelAngle": 0, "labelColor": "#444" }
+                },
+                "y": {
+                    "field": "count",
+                    "type": "quantitative",
+                    "title": "Emberek száma",
+                    "axis": { "labelColor": "#444" }
+                },
+                "xOffset": { "field": "coffee_category" },
+                "color": {
+                    "field": "coffee_category",
+                    "type": "nominal",
+                    "scale": {
+                        "domain": ["Kevés kávé (<2)", "Sok kávé (4+)"],
+                        "range": ["#BCAAA4", "#5D4037"]
+                    },
+                    "legend": { "title": "Kávéfogyasztási kategória", "labelColor": "#444" }
+                },
+                "tooltip": [
+                    { "field": "Health_Issues", "type": "nominal", "title": "Egészségi állapot" },
+                    { "field": "coffee_category", "type": "nominal", "title": "Kategória" },
+                    { "field": "count", "type": "quantitative", "title": "Emberek száma" }
+                ]
+            },
+            "config": {
+                "view": { "stroke": null },
+                "axis": { "grid": false },
+                "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif"
             }
         };
 
@@ -279,62 +520,27 @@
             });
         }
 
-        // Helper that embeds a Vega(-Lite) spec with a loading message and a fallback.
-        function embedWithFallback(selector, spec, fallbackSpec) {
+        // Helper that embeds a Vega(-Lite) spec with a loading message
+        function embedWithFallback(selector, spec) {
             const el = document.querySelector(selector);
             if (!el) return Promise.reject(new Error('Missing element: ' + selector));
-            // show a simple loading state
-            el.innerHTML = '<div style="padding:20px;color:#666">Loading chart…</div>';
+            el.innerHTML = '<div style="padding:20px;color:#666">Vizualizáció betöltése…</div>';
 
             return vegaEmbed(selector, spec, { actions: false })
                 .catch(err => {
-                    // log error for debugging
                     console.error('vegaEmbed error for', selector, err && err.message ? err.message : err);
-                    // show user-facing message
-                    el.innerHTML = '<div style="padding:16px;color:#c00">Chart failed to load (see console). Showing fallback.</div>';
-                    if (fallbackSpec) {
-                        return vegaEmbed(selector, fallbackSpec, { actions: false }).catch(fbErr => {
-                            console.error('fallback embed failed for', selector, fbErr && fbErr.message ? fbErr.message : fbErr);
-                            el.innerHTML = '<div style="padding:16px;color:#c00">Fallback also failed: ' + (fbErr && fbErr.message ? fbErr.message : String(fbErr)) + '</div>';
-                            return Promise.reject(fbErr);
-                        });
-                    }
+                    el.innerHTML = '<div style="padding:16px;color:#c00">A vizualizáció betöltése sikertelen. Ellenőrizd a konzolt.</div>';
                     return Promise.reject(err);
                 });
         }
 
-        // Small inline fallback dataset for the population pyramid (a tiny sample)
-        const fallbackPopulation = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "description": "Inline fallback population sample (small) using page theme.",
-            "data": {
-                "values": [
-                    { "age": "80+", "signed_people": -2000000, "gender": "Female" },
-                    { "age": "70-79", "signed_people": -3500000, "gender": "Female" },
-                    { "age": "60-69", "signed_people": -4500000, "gender": "Female" },
-                    { "age": "50-59", "signed_people": -5200000, "gender": "Female" },
-                    { "age": "40-49", "signed_people": -6000000, "gender": "Female" },
-                    { "age": "30-39", "signed_people": 6200000, "gender": "Male" },
-                    { "age": "20-29", "signed_people": 7000000, "gender": "Male" },
-                    { "age": "10-19", "signed_people": 6800000, "gender": "Male" }
-                ]
-            },
-            "width": "container",
-            "autosize": { "type": "fit", "contains": "padding" },
-            "background": "transparent",
-            "mark": { "type": "bar", "cornerRadius": 6, "opacity": 0.9 },
-            "encoding": {
-                "y": { "field": "age", "type": "ordinal", "sort": "descending" },
-                "x": { "aggregate": "sum", "field": "signed_people", "axis": { "format": "s", "labelColor": "#444" } },
-                "color": { "field": "gender", "scale": { "domain": ["Female", "Male"], "range": ["#764ba2", "#667eea"] } }
-            },
-            "config": { "view": { "stroke": null }, "axis": { "grid": false }, "font": "Segoe UI, Tahoma, Geneva, Verdana, sans-serif" }
-        };
-
-        // Embed all three charts with fallbacks (only spec3 needs fallback because it fetches external data)
-        embedWithFallback('#chart', spec).catch(() => { });
+        // Embed all six charts
+        embedWithFallback('#chart1', spec1).catch(() => { });
         embedWithFallback('#chart2', spec2).catch(() => { });
-        embedWithFallback('#chart3', spec3, fallbackPopulation).catch(() => { });
+        embedWithFallback('#chart3', spec3).catch(() => { });
+        embedWithFallback('#chart4', spec4).catch(() => { });
+        embedWithFallback('#chart5', spec5).catch(() => { });
+        embedWithFallback('#chart6', spec6).catch(() => { });
 
     </script>
 
